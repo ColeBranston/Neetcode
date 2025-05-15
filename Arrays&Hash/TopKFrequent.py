@@ -17,4 +17,4 @@ for i in range(k):
 
     del stor[maxNum]
 
-return returnArray
+print(returnArray)
