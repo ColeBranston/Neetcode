@@ -1,23 +1,37 @@
 class Solution:
-    def isValid(self, s: str) -> bool:
-        stack = []  # stack for proper opening and closing brackets
-        closeToOpen = {  # hashmap for proper bracket categorization
-            ")": "(",
-            "}": "{",
-            "]": "["
-        }
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        # given an array of temperatures where the location in the array is on the ith day
+        # want to return an array where each element is the number of days after the ith day before
+        # a warmer temparature appears on a future day. No number of days after that will be warmer
+        # input 0 for that ith position
 
-        for c in s:
-            if c in closeToOpen:  # checks if the bracket type is in the categorizations hashmap
-                # checks if the stack isn't empty and if the top most element on the stack is the same as the current categorization assignemtn fo the current bracket
-                if stack and stack[-1] == closeToOpen[c]:
-                    stack.pop()  # removes the top most element of the stack
+        #### Brute Force O(n^2) ####
 
-                else:  # if either the stack is empty or the top most element doesn't match the matching closing bracket for the current bracket in the string
-                    return False
+        # def calcDays(array):
+        #     counter = 0
+        #     initial = array[0]
 
-            else:  # if the current bracket isn't in the stack then its therefore an opening bracket, meaning that it will be added to the stack
-                stack.append(c)
+        #     for temp in array:
+        #         if temp > initial:
+        #             return counter
 
-        # returns true almost everytime but before safety checks if the stack is empty to ensure its a correct sequence
-        return True if not stack else False
+        #         else:
+        #             counter += 1
+
+        #     return 0
+
+        # res = []
+        # for i in range(len(temperatures)):
+        #     res.append(calcDays(temperatures[i:]))
+
+        # return res
+
+        res = [0] * len(temperatures)
+        stack = []  # pair: [temp, index]
+
+        for i, t in enumerate(temperatures):
+            while stack and t > stack[-1][0]:
+                stackT, stackInd = stack.pop()
+                res[stackInd] = i - stackInd
+            stack.append((t, i))
+        return res
